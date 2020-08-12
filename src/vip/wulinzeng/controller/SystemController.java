@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import vip.wulinzeng.entity.User;
+import vip.wulinzeng.service.UserService;
 import vip.wulinzeng.util.CpachaUtil;
 
 /**
@@ -29,11 +32,14 @@ import vip.wulinzeng.util.CpachaUtil;
 @Controller
 public class SystemController {
 
+	@Autowired
+	private UserService userService;
+	
 	@RequestMapping(value = "/index",method = RequestMethod.GET)
 	public ModelAndView index(ModelAndView module) {
-		System.out.println("测试环境执行");
-		module.addObject("testInfor", "添加成功");
-		module.setViewName("testEnvironment");
+		//System.out.println("测试环境执行");
+		//module.addObject("testInfor", "添加成功");
+		module.setViewName("system/index");
 		return module;
 	}
 	
@@ -81,6 +87,28 @@ public class SystemController {
 			return ret;
 		}
 		request.getSession().setAttribute("loginCpacha", null);//验证通过从session种去掉验证码  允许进入系统
+		if (type==1) {//管理员
+		//用户名 密码 判断
+		User user = userService.findByUserName(usernameString);
+		if (user==null) {
+			ret.put("type", "error");
+			ret.put("msg", "用户不存在");
+			//System.out.println("has running");
+			return ret;
+		}
+		if (!passwordString.equals(user.getPassword())) {
+			ret.put("type", "error");
+			ret.put("msg", "密码错误");
+			return ret;
+		}
+		request.getSession().setAttribute("user", user);//将用户名放入session
+	 }
+		/**
+		 * bug ！！！
+		 */
+		if(type==2){//学生
+		System.out.println("学生登录");
+	}
 		
 		ret.put("type", "success");
 		ret.put("msg", "登录成功");
