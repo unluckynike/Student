@@ -11,8 +11,9 @@
 <div title="欢迎使用" style="padding:20px;overflow:hidden; color:red; " >
 	<p style="font-size: 50px; line-height: 60px; height: 60px;">${systemInfo.schoolName}</p>
 	<p style="font-size: 25px; line-height: 30px; height: 30px;">欢迎使用学生成绩管理系统</p>
-  	<p>开发人员：HaiLin &nbsp;Zhou</p>
-  	<p>开发周期：2020/8/10 --- 2020/8/20（共计10天）</p>
+  	<p>开发人员：<a href="http://www.wulinzeng.vip">HaiLin&nbsp;Zhou</a></p>
+  	<p>联系作者：2230432084@qq.com</p>
+  	<p>开发周期：2020/8/10 --- 2020/8/（共计天）</p>
   	
   	<hr />
   	<h2>系统环境</h2>
@@ -21,7 +22,7 @@
 	<p>Java版本：JDK 13</p>
 	<p>服务器：tomcat 7.0</p>
 	<p>数据库：MySQL 5.1</p>
-	<p>系统采用技术： Spring+SpringMVC+MyBatis+Servlet+Jsp+EasyUI+jQuery+Ajax</p>
+	<p>系统采用技术： Spring+SpringMVC+MyBatis+Servlet+Jsp+Ajax</p>
 </div>
 </body>
 </html>
