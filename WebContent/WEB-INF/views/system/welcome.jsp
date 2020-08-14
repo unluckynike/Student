@@ -10,7 +10,7 @@
 
 <div title="欢迎使用" style="padding:20px;overflow:hidden; color:red; " >
 	<p style="font-size: 50px; line-height: 60px; height: 60px;">${systemInfo.schoolName}</p>
-	<p style="font-size: 25px; line-height: 30px; height: 30px;">欢迎使用学生成绩管理系统</p>
+	<p style="font-size: 25px; line-height: 30px; height: 30px;">欢迎使用学生管理系统</p>
   	<p>开发人员：<a href="http://www.wulinzeng.vip">HaiLin&nbsp;Zhou</a></p>
   	<p>联系作者：2230432084@qq.com</p>
   	<p>开发周期：2020/8/10 --- 2020/8/（共计天）</p>
