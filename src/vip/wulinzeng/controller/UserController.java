@@ -60,6 +60,37 @@ public class UserController {
 	}
 	
 	/**
+	 * 删除用户（管理员）
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping(value = "/delete",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> delete(
+			@RequestParam(value = "ids[]",required = true)Long[] ids){
+		Map<String, String> ret=new HashMap<String, String>();
+		if (ids==null) {
+			ret.put("type", "error");
+			ret.put("msg", "请选择删除的数据");
+			return ret;
+		}
+		String idString="";
+		for(Long id:ids) {
+			idString+=id+",";
+		}
+		idString=idString.substring(0, idString.length()-1);//批量删除 去掉idSting最后的
+		if (userService.delete(idString)<=0) {
+			ret.put("type", "error");
+			ret.put("msg", "删除数据失败");
+			return ret;
+		}
+		ret.put("type", "success");
+		ret.put("msg", "删除成功");
+		
+	 return ret;
+	}
+	
+	/**
 	 * 修改用户（管理员）
 	 * @param user
 	 * @return

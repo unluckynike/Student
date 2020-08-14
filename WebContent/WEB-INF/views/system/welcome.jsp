@@ -4,7 +4,6 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
 </head>
 <body>
 
@@ -12,7 +11,9 @@
 	<p style="font-size: 50px; line-height: 60px; height: 60px;">${systemInfo.schoolName}</p>
 	<p style="font-size: 25px; line-height: 30px; height: 30px;">欢迎使用学生管理系统</p>
   	<p>开发人员：<a href="http://www.wulinzeng.vip">HaiLin&nbsp;Zhou</a></p>
+  	<p>参与项目：<a href="https://github.com/unluckynike">issue</a></p>
   	<p>联系作者：2230432084@qq.com</p>
+
   	<p>开发周期：2020/8/10 --- 2020/8/（共计天）</p>
   	
   	<hr />
@@ -23,6 +24,10 @@
 	<p>服务器：tomcat 7.0</p>
 	<p>数据库：MySQL 5.1</p>
 	<p>系统采用技术： Spring+SpringMVC+MyBatis+Servlet+Jsp+Ajax</p>
+	
+	<div>
+	<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="550" height="110" loading="lazy" sandbox="allow-popups allow-scripts allow-same-origin" src="https://www.xiami.com/webapp/embed-player?autoPlay=1&id=2121966"></iframe>
+    </div>
 </div>
 </body>
 </html>

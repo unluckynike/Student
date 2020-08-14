@@ -15,7 +15,7 @@
 	<script type="text/javascript" src='../easyui/js/outlook2.js'> </script>
     <script type="text/javascript">
 	 var _menus = {"menus":[
-						{"menuid":"1","icon":"","menuname":"用户（管理管理员）",
+						{"menuid":"1","icon":"","menuname":"用户（管理员）管理",
 							"menus":[
 									{"menuid":"11","menuname":"用户列表","icon":"icon-user-teacher","url":"../user/list"}
 								]
