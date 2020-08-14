@@ -6,4 +6,17 @@
     <select id="findByUserName" parameterType="String" resultType="User">
        select * from user where username=#{username}
     </select>
+    <select id="findList" parameterType="Map" resultType="User">
+       select * from user where username like #{username} limit #{offset},#{pageSize}
+    </select>
+        <select id="getTotal" parameterType="Map" resultType="Integer">
+       select count(id) from user where username like #{username} 
+    </select>
+    <update id="add" parameterType="User" >
+          insert into user(id,username,password) values(NULL,#{username},#{password})
+    </update>
+    <update id="edit" parameterType="User" >
+          update user set username=#{username},password=#{password} where id=#{id}
+    </update>
+
 </mapper>
