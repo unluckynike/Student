@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -33,7 +34,7 @@
 	        columns: [[  
 				{field:'chk',checkbox: true,width:50},
  		        {field:'id',title:'ID',width:50, sortable: true},    
- 		        {field:'name',title:'年级名称',width:150, sortable: true},
+ 		        {field:'name',title:'年级名',width:150, sortable: true},
  		        {field:'remark',title:'备注',width:300},
 	 		]], 
 	        toolbar: "#toolbar"
@@ -73,7 +74,7 @@
             	$(selectRows).each(function(i, row){
             		ids[i] = row.id;
             	});
-            	$.messager.confirm("消息提醒", "将删除与年级相关的所有数据，确认继续？", function(r){
+            	$.messager.confirm("消息提醒", "如果年级下存在班级信息则无法删除，须先删除年级下属的班级信息？", function(r){
             		if(r){
             			$.ajax({
 							type: "post",
@@ -100,7 +101,7 @@
 	  	//设置添加窗口
 	    $("#addDialog").dialog({
 	    	title: "添加年级",
-	    	width: 400,
+	    	width: 450,
 	    	height: 350,
 	    	iconCls: "icon-add",
 	    	modal: true,
@@ -132,8 +133,8 @@
 										//关闭窗口
 										$("#addDialog").dialog("close");
 										//清空原表格数据
-										$("#add_username").textbox('setValue', "");
-										$("#add_password").textbox('setValue', "");
+										$("#add_name").textbox('setValue', "");
+										$("#add_remark").textbox('setValue', "");
 										//重新刷新页面数据
 							  			$('#dataList').datagrid("reload");
 										
@@ -148,16 +149,16 @@
 				},
 			],
 			onClose: function(){
-				$("#add_username").textbox('setValue', "");
-				$("#add_password").textbox('setValue', "");
+				$("#add_name").textbox('setValue', "");
+				$("#add_remark").textbox('setValue', "");
 			}
 	    });
 	  	
 	  	//编辑年级信息
 	  	$("#editDialog").dialog({
 	  		title: "修改年级信息",
-	    	width: 350,
-	    	height: 200,
+	    	width: 450,
+	    	height: 350,
 	    	iconCls: "icon-edit",
 	    	modal: true,
 	    	collapsible: false,
@@ -208,15 +209,15 @@
 				var selectRow = $("#dataList").datagrid("getSelected");
 				//设置值
 				$("#edit-id").val(selectRow.id);
-				$("#edit_username").textbox('setValue', selectRow.username);
-				$("#edit_password").textbox('setValue', selectRow.password);
+				$("#edit_name").textbox('setValue', selectRow.name);
+				$("#edit_remark").textbox('setValue', selectRow.remark);
 			}
 	    });
 	   	
 	  	//搜索按钮
 	  	$("#search-btn").click(function(){
 	  		$('#dataList').datagrid('reload',{
-	  			username:$("#search-username").textbox('getValue')
+	  			name:$("#search-name").textbox('getValue')
 	  		});
 	  	});
 	});
@@ -229,30 +230,32 @@
 	</table> 
 	<!-- 工具栏 -->
 	<div id="toolbar">
+	<div id="toolbar">
 		<div style="float: left;"><a id="add" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a></div>
 			<div style="float: left;" class="datagrid-btn-separator"></div>
 		<div style="float: left;"><a id="edit" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a></div>
 			<div style="float: left;" class="datagrid-btn-separator"></div>
 		<div>
 			<a id="delete" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-some-delete',plain:true">删除</a>
-			年级名：<input id="search-username" class="easyui-textbox" />
+			用户名：<input id="search-name" class="easyui-textbox" />
 			<a id="search-btn" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">搜索</a>
 		</div>
 	</div>
+	</div>
 	
-	<!-- 添加窗口 -->
+	<!-- 添加窗口 -->s
 	<div id="addDialog" style="padding: 10px;">  
    		<form id="addForm" method="post">
 	    	<table id="addTable" cellpadding="8">
 	    		<tr >
-	    			<td>年级名称:</td>
+	    			<td>年级名:</td>
 	    			<td>
 	    				<input id="add_name"  class="easyui-textbox" style="width: 200px; height: 30px;" type="text" name="name" data-options="required:true, missingMessage:'请填写年级名'"  />
 	    			</td>
 	    		</tr>
 	    		<tr>
 	    			<td>备注:</td>
-	    			<td><textarea id="add_remake" style="width: 200px; height: 150px;" name="remark" /></textarea></td>
+	    			<td><input id="add_remark" style="width: 256px; height: 180px;" class="easyui-textbox" type="text" name="remark" data-options="multiline:true"  /></td>
 	    		</tr>
 	    	</table>
 	    </form>
@@ -267,12 +270,12 @@
 	    		<tr >
 	    			<td>年级名:</td>
 	    			<td>
-	    				<input id="edit_username"  class="easyui-textbox" style="width: 200px; height: 30px;" type="text" name="username" data-options="required:true, missingMessage:'请填写年级名'"  />
+	    				<input id="edit_name"  class="easyui-textbox" style="width: 200px; height: 30px;" type="text" name="name" data-options="required:true, missingMessage:'请填写年级名'"  />
 	    			</td>
 	    		</tr>
 	    		<tr>
-	    			<td>密码:</td>
-	    			<td><input id="edit_password" style="width: 200px; height: 30px;" class="easyui-textbox" type="password" name="password" data-options="required:true, missingMessage:'请填写密码'"  /></td>
+	    			<td>备注:</td>
+	    			<td><input id="edit_remark" style="width: 256px; height: 180px;" class="easyui-textbox" type="text" name="remark" data-options="multiline:true"  /></td>
 	    		</tr>
 	    	</table>
 	    </form>

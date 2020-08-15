@@ -1,5 +1,6 @@
 package vip.wulinzeng.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import vip.wulinzeng.entity.Grade;
 import vip.wulinzeng.page.Page;
 import vip.wulinzeng.service.GradeService;
+import vip.wulinzeng.util.StringUtil;
 
 /**
  * 年级管理
@@ -55,6 +57,11 @@ public class GradeController {
 	 return ret;
 	}
 	
+	/**
+	 * 添加年级
+	 * @param grade
+	 * @return
+	 */
 	@RequestMapping(value = "/add",method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, String> add(Grade grade ){
@@ -73,4 +80,59 @@ public class GradeController {
 		ret.put("msg", "年级添加成功");
 		return ret;
 	}
+	
+	@RequestMapping(value = "/delete",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> Delete(
+			@RequestParam(value = "ids[]",required = true)Long[] ids){
+		Map<String,String> ret = new HashMap<String, String>();
+		if (ids==null||ids.length==0) {
+			ret.put("type", "error");
+			ret.put("msg", "选择要删除的数据");
+			return ret;
+		}
+        try {
+    		if (gradeService.delete(StringUtil.joinString(Arrays.asList(ids), ","))<=0) {//aslist将一个数组转化为一个List对象 jdk1.2 返回一个arrayList
+    			ret.put("type", "error");
+    			ret.put("msg", "删除数据失败");
+    			return ret;
+    		}
+        	
+		} catch (Exception e) {
+			// TODO: handle exception
+			ret.put("type", "error");
+			ret.put("msg", "年级下存在班级信息");
+			return ret;
+		}
+		ret.put("type", "success");
+		ret.put("msg", "年级删除成功");
+		return ret;
+	}
+	
+	/**
+	 * 修改年级
+	 * @param grade
+	 * @return
+	 */
+	@RequestMapping(value = "/edit",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> edit(Grade grade ){
+		Map<String, String> ret=new HashMap<String, String>();
+		if (StringUtils.isEmpty(grade.getName())) {
+			ret.put("type", "error");
+			ret.put("msg", "年级名称不能为空");
+			return ret;
+		}
+		if (gradeService.edit(grade)<=0) {
+			ret.put("type", "error");
+			ret.put("msg", "年级修改失败");
+			return ret;
+		}
+		ret.put("type", "success");
+		ret.put("msg", "年级修改成功");		
+		return ret;
+	}
+	
+	
+	
 }
