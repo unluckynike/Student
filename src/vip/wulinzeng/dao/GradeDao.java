@@ -14,6 +14,8 @@ public interface GradeDao {
 	
 	public List<Grade> findList(Map<String,Object> queryMap);
 	
+	public List<Grade> findAll();
+	
 	public int getTotal(Map<String,Object> queryMap);
 	
 	public int edit(Grade grade);

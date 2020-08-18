@@ -12,8 +12,8 @@
 	<p style="font-size: 25px; line-height: 30px; height: 30px;">欢迎使用学生管理系统</p>
   	<p>开发人员：<a href="http://www.wulinzeng.vip">HaiLin&nbsp;Zhou</a></p>
   	<p>参与项目：<a href="https://github.com/unluckynike">issue</a></p>
-  	<p>联系作者：2230432084@qq.com</p>
-
+  	<p>联系作者：<a href="http://wpa.qq.com/msgrd?v=3&uin=2230432084&site=qq&menu=yes">QQ</a></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="Mailto:2230432084@qq.com">邮件</a></p>
   	<p>开发周期：2020/8/10 --- 2020/8/（共计天）</p>
   	
   	<hr />

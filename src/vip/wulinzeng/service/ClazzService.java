@@ -5,20 +5,20 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import vip.wulinzeng.entity.Grade;
+import vip.wulinzeng.entity.Clazz;
 
 @Service
-public interface GradeService {
+public interface ClazzService {
 
-	public int add(Grade grade);
+	public int add(Clazz clazz);
 
-	public List<Grade> findList(Map<String, Object> queryMap);
+	public List<Clazz> findList(Map<String, Object> queryMap);
 
-	public List<Grade> findAll();
+	public List<Clazz> findAll();
 
 	public int getTotal(Map<String, Object> queryMap);
 
-	public int edit(Grade grade);
+	public int edit(Clazz clazz);
 
 	public int delete(String ids);
 

@@ -6,7 +6,10 @@
     <select id="findList" parameterType="Map" resultType="Grade">
        select * from grade where name like #{name} limit #{offset},#{pageSize}
     </select>
-        <select id="getTotal" parameterType="Map" resultType="Integer">
+    <select id="findAll"  resultType="Grade">
+       select * from grade 
+    </select>
+    <select id="getTotal" parameterType="Map" resultType="Integer">
        select count(id) from grade where name like #{name} 
     </select>
     <update id="add" parameterType="Grade" >
