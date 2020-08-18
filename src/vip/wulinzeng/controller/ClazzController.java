@@ -2,6 +2,7 @@ package vip.wulinzeng.controller;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import net.sf.json.JSONArray;
 import vip.wulinzeng.entity.Clazz;
 import vip.wulinzeng.entity.Grade;
 import vip.wulinzeng.page.Page;
@@ -38,7 +40,9 @@ public class ClazzController {
 	@RequestMapping(value = "/list",method = RequestMethod.GET)
 	public ModelAndView list(ModelAndView model) {
 		model.setViewName("clazz/clazz_list");
+		List<Grade> findAll = gradeService.findAll();
 		model.addObject("gradeList", gradeService.findAll());
+		model.addObject("gradeListJson", JSONArray.fromObject(findAll));
 		return model;
 	}
 	
@@ -52,10 +56,14 @@ public class ClazzController {
 	@ResponseBody
 	public Map<String, Object> getList( 
 			@RequestParam(value = "name",required = false,defaultValue = "")String name,
+			@RequestParam(value = "gradeId",required = false)Long gradeId,
 			Page page){
 		Map<String, Object> ret=new HashMap<String, Object>();
 		Map<String, Object> queryMap=new HashMap<String, Object>();
 		queryMap.put("name", "%"+name+"%");//模糊查询
+		if (gradeId!=null) {
+			queryMap.put("gradeId", gradeId);
+		}
 		queryMap.put("offset", page.getOffset());
 		queryMap.put("pageSize", page.getRows());
 		ret.put("rows", clazzService.findList(queryMap));//返回list
@@ -88,7 +96,8 @@ public class ClazzController {
 	//System.out.println("springmvc:"+gradeId);
 	       clazz.setGradeID(gradeId);
 	//System.out.println("springioc:"+clazz.getId()+" "+clazz.getName()+" "+clazz.getGradeId()+" "+clazz.getRemark());
-		if (clazz.getName() == null) {//getGradeId  返回值long类型
+	       
+		if (clazz.getGradeId() == 0) {//getGradeId  返回值long类型
 	//System.out.println("clazz-name:"+clazz.getName());
 			ret.put("type", "error");
 			ret.put("msg", "请选择所属年级");
@@ -115,7 +124,7 @@ public class ClazzController {
 			return ret;
 		}
         try {
-    		if (gradeService.delete(StringUtil.joinString(Arrays.asList(ids), ","))<=0) {//aslist将一个数组转化为一个List对象 jdk1.2 返回一个arrayList
+    		if (clazzService.delete(StringUtil.joinString(Arrays.asList(ids), ","))<=0) {//aslist将一个数组转化为一个List对象 jdk1.2 返回一个arrayList
     			ret.put("type", "error");
     			ret.put("msg", "删除数据失败");
     			return ret;
@@ -124,7 +133,7 @@ public class ClazzController {
 		} catch (Exception e) {
 			// TODO: handle exception
 			ret.put("type", "error");
-			ret.put("msg", "班级下存在班级信息");
+			ret.put("msg", "班级下存在学生信息");
 			return ret;
 		}
 		ret.put("type", "success");
@@ -133,20 +142,32 @@ public class ClazzController {
 	}
 	
 	/**
-	 * 修改班级
+	 * 修改班级信息
 	 * @param grade
 	 * @return
 	 */
 	@RequestMapping(value = "/edit",method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> edit(Grade grade ){
+	public Map<String, String> edit(
+			@RequestParam(value = "gradeId",required = true)Long gradeId,
+			Clazz clazz ){
 		Map<String, String> ret=new HashMap<String, String>();
-		if (StringUtils.isEmpty(grade.getName())) {
+		if (StringUtils.isEmpty(clazz.getName())) {
 			ret.put("type", "error");
 			ret.put("msg", "班级名称不能为空");
 			return ret;
 		}
-		if (gradeService.edit(grade)<=0) {
+		/**
+		 * 同添加待优化
+		 */
+		 clazz.setGradeID(gradeId);
+	//System.out.println(clazz);
+		if (clazz.getGradeId()==0) {
+			ret.put("type", "error");
+			ret.put("msg", "所属年级不能为空不能为空");
+			return ret;
+		}
+		if (clazzService.edit(clazz)<=0) {
 			ret.put("type", "error");
 			ret.put("msg", "班级修改失败");
 			return ret;

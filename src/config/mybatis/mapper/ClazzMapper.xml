@@ -6,10 +6,10 @@
     <select id="findList" parameterType="Map" resultType="Clazz">
   		select * from clazz where 1=1 
   		<if test="name !=null">
-  			and name like #{name} 
+  		and name like #{name} 
   		</if>
   		<if test="gradeId !=null">
-  			and gradeId = #{gradeId} 
+  		and gradeId = #{gradeId} 
   		</if>
   		limit #{offset},#{pageSize}
     </select>
@@ -19,11 +19,11 @@
     <select id="getTotal" parameterType="Map" resultType="Integer">
   		select count(id) from clazz where 1=1 
   		<if test="name !=null">
-  			and name like #{name} 
+  		and name like #{name} 
   		</if>
   		<if test="gradeId !=null">
-  			and gradeId = #{gradeId} 
-  		</if>sss
+  		and gradeId = #{gradeId} 
+  		</if>
     </select>
     <update id="add" parameterType="Clazz" >
           insert into clazz(id,gradeId,name,remark) values(NULL,#{gradeId},#{name},#{remark})

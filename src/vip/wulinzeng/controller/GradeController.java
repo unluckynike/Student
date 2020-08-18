@@ -94,7 +94,7 @@ public class GradeController {
         try {
     		if (gradeService.delete(StringUtil.joinString(Arrays.asList(ids), ","))<=0) {//aslist将一个数组转化为一个List对象 jdk1.2 返回一个arrayList
     			ret.put("type", "error");
-    			ret.put("msg", "删除数据失败");
+    			ret.put("msg", "删除数据失败，年级下存在班级");//年级下存在班级
     			return ret;
     		}
         	

@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="../easyui/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="../easyui/js/validateExtends.js"></script>
 	<script type="text/javascript">
+	var gradeList = ${gradeListJson};
 	$(function() {	
 		var table;
 		
@@ -35,7 +36,17 @@
 				{field:'chk',checkbox: true,width:50},
  		        {field:'id',title:'ID',width:50, sortable: true},    
  		        {field:'name',title:'班级名',width:150, sortable: true},
- 		        {field:'clazzId',title:'所属年级',width:150, sortable: true},
+ 		        {field:'gradeId',title:'所属年级',width:150, sortable: true,
+ 		        	formatter:function(value,index,row){//formatter 属于列参数，表示对于当前列的数据进行格式化操作，它是一个函数，有三个参数，分别是value，row,index
+ 		        		for(var i=0;i<gradeList.length;i++){//value：表示当前单元格中的值 	row：表示当前行 index：表示当前行的下标 
+ 		        			if(gradeList[i].id == value){//可以使用return返回想要的数据显示在单元格中
+ 		        				return gradeList[i].name;
+ 		        			}
+ 		        		}
+ 		        		return value;
+ 		    	   }
+ 		        },
+ 		        
  		        {field:'remark',title:'备注',width:300},
 	 		]], 
 	        toolbar: "#toolbar"
@@ -75,7 +86,7 @@
             	$(selectRows).each(function(i, row){
             		ids[i] = row.id;
             	});
-            	$.messager.confirm("消息提醒", "如果班级下存在班级信息则无法删除，须先删除班级下属的班级信息？", function(r){
+            	$.messager.confirm("消息提醒", "如果班级下存在学生信息则无法删除，须先删除班级下属的学生信息？", function(r){
             		if(r){
             			$.ajax({
 							type: "post",
@@ -159,7 +170,7 @@
 	  	$("#editDialog").dialog({
 	  		title: "修改班级信息",
 	    	width: 450,
-	    	height: 350,
+	    	height: 400,
 	    	iconCls: "icon-edit",
 	    	modal: true,
 	    	collapsible: false,
@@ -211,6 +222,7 @@
 				//设置值
 				$("#edit-id").val(selectRow.id);
 				$("#edit_name").textbox('setValue', selectRow.name);
+				$("#edit_gradeId").combobox('setValue', selectRow.gradeId);
 				$("#edit_remark").textbox('setValue', selectRow.remark);
 			}
 	    });
@@ -228,7 +240,8 @@
 	  	//搜索按钮
 	  	$("#search-btn").click(function(){
 	  		$('#dataList').datagrid('reload',{
-	  			name:$("#search-name").textbox('getValue')
+	  			name:$("#search-name").textbox('getValue'),
+	  			gradeId:$("#search-grade-id").combobox('getValue')
 	  		});
 	  	});
 	});
@@ -248,7 +261,14 @@
 			<div style="float: left;" class="datagrid-btn-separator"></div>
 		<div>
 			<a id="delete" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-some-delete',plain:true">删除</a>
-			用户名：<input id="search-name" class="easyui-textbox" />
+			班级名称：<input id="search-name" class="easyui-textbox" />
+			所属年级：
+			<select id="search-grade-id" class="easyui-combobox" style="width: 150px;">
+				<option value="">全部</option>
+				<c:forEach items="${ gradeList}" var="grade">
+	    			<option value="${grade.id }">${grade.name }</option>
+	    		</c:forEach>
+			</select>
 			<a id="search-btn" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">搜索</a>
 		</div>
 	</div>
@@ -292,6 +312,16 @@
 	    			<td>班级名:</td>
 	    			<td>
 	    				<input id="edit_name"  class="easyui-textbox" style="width: 200px; height: 30px;" type="text" name="name" data-options="required:true, missingMessage:'请填写班级名'"  />
+	    			</td>
+	    		</tr>
+	    		<tr >
+	    			<td>所属年级:</td>
+	    			<td>
+	    				<select id="edit_gradeId"  class="easyui-combobox" style="width: 200px;" name="gradeId" data-options="required:true, missingMessage:'请选择所属年级'">
+	    					<c:forEach items="${gradeList}" var="grade">
+	    						<option value="${grade.id}">${grade.name}</option>
+	    					</c:forEach>
+	    				</select>
 	    			</td>
 	    		</tr>
 	    		<tr>

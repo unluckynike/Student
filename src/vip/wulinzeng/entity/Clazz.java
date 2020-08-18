@@ -39,6 +39,10 @@ public class Clazz {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+	@Override
+	public String toString() {
+		return "Clazz [id=" + id + ", gradeId=" + gradeId + ", name=" + name + ", remark=" + remark + "]";
+	}
 	
 	
 	

@@ -237,7 +237,7 @@
 			<div style="float: left;" class="datagrid-btn-separator"></div>
 		<div>
 			<a id="delete" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-some-delete',plain:true">删除</a>
-			用户名：<input id="search-name" class="easyui-textbox" />
+			年级名称：<input id="search-name" class="easyui-textbox" />
 			<a id="search-btn" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">搜索</a>
 		</div>
 	</div>
