@@ -1,9 +1,13 @@
 package vip.wulinzeng.controller;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,42 +16,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import net.sf.json.JSONArray;
 import vip.wulinzeng.entity.Clazz;
-import vip.wulinzeng.entity.Grade;
 import vip.wulinzeng.page.Page;
 import vip.wulinzeng.service.ClazzService;
-import vip.wulinzeng.service.GradeService;
 import vip.wulinzeng.util.StringUtil;
 
 /**
- * 班级管理
+ * 学生管理
  * @author 22304
  *
  */
-@RequestMapping("/clazz")
+@RequestMapping("/student")
 @Controller
-public class ClazzController {
+public class StudentController {
 	
-	@Autowired
-	private GradeService gradeService;
 	
 	@Autowired
 	private ClazzService clazzService;
 
 	@RequestMapping(value = "/list",method = RequestMethod.GET)
 	public ModelAndView list(ModelAndView model) {
-		model.setViewName("clazz/clazz_list");
-		List<Grade> findAll = gradeService.findAll();
-		model.addObject("gradeList", findAll);
-		model.addObject("gradeListJson", JSONArray.fromObject(findAll));
+		model.setViewName("student/student_list");
+		/**
+		 * 获取全部班级
+		 */
+		List<Clazz> clazzList = clazzService.findAll();
+		model.addObject("clazzList", clazzList);
+		model.addObject("clazzListJson", JSONArray.fromObject(clazzList));
 		return model;
 	}
 	
+	
 	/**
-	 * 查询班级列表
+	 * 查询学生列表
 	 * @param name
 	 * @param page
 	 * @return
@@ -73,7 +78,7 @@ public class ClazzController {
 	
 	
 	/**
-	 * 添加班级
+	 * 添加学生
 	 * @param grade
 	 * @return
 	 */
@@ -85,7 +90,7 @@ public class ClazzController {
 		Map<String, String> ret=new HashMap<String, String>();
 		if (StringUtils.isEmpty(clazz.getName())) {
 			ret.put("type", "error");
-			ret.put("msg", "班级名称不能为空");
+			ret.put("msg", "学生名称不能为空");
 			return ret;
 		}
 		/**
@@ -105,11 +110,11 @@ public class ClazzController {
 		}
 		if (clazzService.add(clazz)<=0) {
 			ret.put("type", "error");
-			ret.put("msg", "班级添加失败");
+			ret.put("msg", "学生添加失败");
 			return ret;
 		}
 		ret.put("type", "success");
-		ret.put("msg", "班级添加成功");
+		ret.put("msg", "学生添加成功");
 		return ret;
 	}
 	
@@ -133,16 +138,16 @@ public class ClazzController {
 		} catch (Exception e) {
 			// TODO: handle exception
 			ret.put("type", "error");
-			ret.put("msg", "班级下存在学生信息");
+			ret.put("msg", "学生下存在学生信息");
 			return ret;
 		}
 		ret.put("type", "success");
-		ret.put("msg", "班级删除成功");
+		ret.put("msg", "学生删除成功");
 		return ret;
 	}
 	
 	/**
-	 * 修改班级信息
+	 * 修改学生信息
 	 * @param grade
 	 * @return
 	 */
@@ -154,7 +159,7 @@ public class ClazzController {
 		Map<String, String> ret=new HashMap<String, String>();
 		if (StringUtils.isEmpty(clazz.getName())) {
 			ret.put("type", "error");
-			ret.put("msg", "班级名称不能为空");
+			ret.put("msg", "学生名称不能为空");
 			return ret;
 		}
 		/**
@@ -169,14 +174,44 @@ public class ClazzController {
 		}
 		if (clazzService.edit(clazz)<=0) {
 			ret.put("type", "error");
-			ret.put("msg", "班级修改失败");
+			ret.put("msg", "学生修改失败");
 			return ret;
 		}
 		ret.put("type", "success");
-		ret.put("msg", "班级修改成功");		
+		ret.put("msg", "学生修改成功");		
 		return ret;
 	}
 	
-	
+	/**
+	 * 图片（头像）上传
+	 * @param photo
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/upload_photo",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> uploadPhoto(
+			MultipartFile photo ,
+			HttpServletRequest request,
+			HttpServletResponse response
+			) throws IOException{
+		response.setCharacterEncoding("utf-8");
+		Map<String, String> ret=new HashMap<String, String>();
+		if (photo==null) {
+			//未选择文件
+			ret.put("type", "error");
+			ret.put("msg", "未选择头像");
+			return ret;
+		}
+		String contextPath = request.getServletContext().getContextPath();
+		System.out.println("path:"+contextPath);
+
+//		if (StringUtils.isEmpty(clazz.getName())) {
+//			ret.put("type", "error");
+//			ret.put("msg", "学生名称不能为空");
+			return ret;
+		}
 	
 }
