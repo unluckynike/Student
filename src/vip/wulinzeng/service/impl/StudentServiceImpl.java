@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import vip.wulinzeng.dao.StudentDao;
 import vip.wulinzeng.entity.Student;
 import vip.wulinzeng.service.StudentService;
 
-
+@Service
 public class StudentServiceImpl implements StudentService{
 
 	@Autowired

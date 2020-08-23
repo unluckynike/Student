@@ -38,7 +38,7 @@
  		        {field:'username',title:'姓名',width:150, sortable: true},
  		        {field:'sn',title:'学号',width:150, sortable: true},
  		        {field:'sex',title:'性别',width:150, sortable: true},
- 		        {field:'clazzId',title:'所属班级',width:150, sortable: true,
+ 		        {field:'clazzId',title:'所属班级',width:200, sortable: true,
  		        	formatter:function(value,index,row){//formatter 属于列参数，表示对于当前列的数据进行格式化操作，它是一个函数，有三个参数，分别是value，row,index
  		        		for(var i=0;i<clazzList.length;i++){//value：表示当前单元格中的值 	row：表示当前行 index：表示当前行的下标 
  		        			if(clazzList[i].id == value){//可以使用return返回想要的数据显示在单元格中
@@ -50,6 +50,7 @@
  		        },
  		        
  		        {field:'password',title:'密码',width:150},
+ 		        {field:'remark',title:'备注',width:200},
 	 		]], 
 	        toolbar: "#toolbar"
 	    }); 
@@ -243,7 +244,7 @@
 	  	$("#search-btn").click(function(){
 	  		$('#dataList').datagrid('reload',{
 	  			name:$("#search-name").textbox('getValue'),
-	  			gradeId:$("#search-grade-id").combobox('getValue')
+	  			clazzId:$("#search-clazz-id").combobox('getValue')
 	  		});
 	  	});
 		//上传图片按钮
@@ -288,10 +289,10 @@
 			<a id="delete" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-some-delete',plain:true">删除</a>
 			学生名称：<input id="search-name" class="easyui-textbox" />
 			所属年级：
-			<select id="search-grade-id" class="easyui-combobox" style="width: 150px;">
+			<select id="search-clazz-id" class="easyui-combobox" style="width: 200px;">
 				<option value="">全部</option>
-				<c:forEach items="${ gradeList}" var="grade">
-	    			<option value="${grade.id }">${grade.name }</option>
+				<c:forEach items="${ clazzList}" var="clazz">
+	    			<option value="${clazz.id }">${clazz.name }</option>
 	    		</c:forEach>
 			</select>
 			<a id="search-btn" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">搜索</a>

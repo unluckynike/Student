@@ -26,6 +26,7 @@ import vip.wulinzeng.entity.Clazz;
 import vip.wulinzeng.entity.Student;
 import vip.wulinzeng.page.Page;
 import vip.wulinzeng.service.ClazzService;
+import vip.wulinzeng.service.StudentService;
 import vip.wulinzeng.util.StringUtil;
 
 /**
@@ -40,6 +41,8 @@ public class StudentController {
 
 	@Autowired
 	private ClazzService clazzService;
+	@Autowired
+	private StudentService studentService;
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list(ModelAndView model) {
@@ -62,18 +65,20 @@ public class StudentController {
 	 */
 	@RequestMapping(value = "/get_list", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> getList(@RequestParam(value = "name", required = false, defaultValue = "") String name,
-			@RequestParam(value = "gradeId", required = false) Long gradeId, Page page) {
+	public Map<String, Object> getList(
+			@RequestParam(value = "name", required = false, defaultValue = "") String name,
+			@RequestParam(value = "clazzId", required = false) Long clazzId,
+			Page page) {
 		Map<String, Object> ret = new HashMap<String, Object>();
 		Map<String, Object> queryMap = new HashMap<String, Object>();
-		queryMap.put("name", "%" + name + "%");// 模糊查询
-		if (gradeId != null) {
-			queryMap.put("gradeId", gradeId);
+		queryMap.put("username", "%" + name + "%");// 模糊查询
+		if (clazzId != null) {
+			queryMap.put("clazzId", clazzId);
 		}
 		queryMap.put("offset", page.getOffset());
 		queryMap.put("pageSize", page.getRows());
-		ret.put("rows", clazzService.findList(queryMap));// 返回list
-		ret.put("total", clazzService.getTotal(queryMap));// 返回total总数
+		ret.put("rows", studentService.findList(queryMap));// 返回list
+		ret.put("total", studentService.getTotal(queryMap));// 返回total总数
 		return ret;
 	}
 
@@ -112,12 +117,16 @@ public class StudentController {
 			ret.put("msg", "请选择所属班级");
 			return ret;
 		}
+		if (isExist(student.getUsername(), null)) {
+			ret.put("type", "error");
+			ret.put("msg", "该姓名已存在");
+		}
 		student.setSn(StringUtil.generateSn("18001", ""));
-		/*if (clazzService.add(student) <= 0) {
+		if (studentService.add(student) <= 0) {
 			ret.put("type", "error");
 			ret.put("msg", "学生添加失败");
 			return ret;
-		}*/
+		}
 		System.out.println("student:"+student);
 		ret.put("type", "success");
 		ret.put("msg", "学生添加成功");
@@ -237,7 +246,18 @@ public class StudentController {
 		ret.put("msg", "学生添加成功");
 		ret.put("src", request.getServletContext().getContextPath() + "/upload/" + filenameString);
 		return ret;
-
 	}
 
+	private boolean isExist(String username,Long id) {
+		Student student = studentService.findByUserName(username);
+		if (student!=null) {
+			if (id==null) {
+				return true;
+			}
+			if (student.getId().longValue()!=id.longValue()) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
