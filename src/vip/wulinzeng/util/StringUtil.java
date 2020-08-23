@@ -27,7 +27,12 @@ public class StringUtil {
 		return ret;
 	}
 	
-	
+	/**
+	 * Éú³ÉÑ§ºÅ
+	 * @param prefix
+	 * @param suffix
+	 * @return
+	 */
 	public static String generateSn(String prefix,String suffix){
 		return prefix + new Date().getTime() + suffix;
 	}

@@ -128,7 +128,7 @@
 	    		{
 					text:'添加',
 					plain: true,
-					iconCls:'icon-user_add',
+					iconCls:'icon-add',
 					handler:function(){
 						var validate = $("#addForm").form("validate");
 						if(!validate){
@@ -147,8 +147,8 @@
 										//关闭窗口
 										$("#addDialog").dialog("close");
 										//清空原表格数据
-										$("#add_name").textbox('setValue', "");
-										$("#add_remark").textbox('setValue', "");
+										$("#add_username").textbox('setValue', "");
+										$("#add_password").textbox('setValue', "");
 										//重新刷新页面数据
 							  			$('#dataList').datagrid("reload");
 										
@@ -163,8 +163,8 @@
 				},
 			],
 			onClose: function(){
-				$("#add_name").textbox('setValue', "");
-				$("#add_remark").textbox('setValue', "");
+				$("#add_username").textbox('setValue', "");
+				$("#add_password").textbox('setValue', "");
 			}
 	    });
 	  	
@@ -255,6 +255,21 @@
 	  		$("#photoForm").submit();
 	  	});
 	});
+	
+	function uploaded(e){
+		var data = $(window.frames["photo_target"].document).find("body pre").text();
+		if(data == '')return;
+		data = JSON.parse(data);
+		if(data.type == "success"){
+			$.messager.alert("消息提醒","图片上传成功!","info");
+			$("#photo-preview").attr("src",data.src);
+			$("#edit-photo-preview").attr("src",data.src);
+			$("#add_photo").val(data.src);
+			$("#edit_photo").val(data.src);
+		}else{
+			$.messager.alert("消息提醒",data.msg,"warning");
+		}
+	}
 	</script>
 </head>
 <body>
@@ -309,7 +324,7 @@
 	    		<tr >
 	    			<td>学生姓名:</td>
 	    			<td>
-	    				<input id="add_name"  class="easyui-textbox" style="width: 200px; height: 30px;" type="text" name="username" data-options="required:true, missingMessage:'请填写学生姓名'"  />
+	    				<input id="add_username"  class="easyui-textbox" style="width: 200px; height: 30px;" type="text" name="username" data-options="required:true, missingMessage:'请填写学生姓名'"  />
 	    			</td>
 	    		</tr>
 	    		<tr >
@@ -376,7 +391,7 @@
 	</div>
 		
 		<!-- 提交表单处理iframe框架 隐藏用户无感知 -->
-	<iframe id="photo_target" name="photo_target"></iframe>    
+	<iframe id="photo_target" name="photo_target" onload="uploaded(this)"></iframe>    
 	    
 </body>
 </html>
