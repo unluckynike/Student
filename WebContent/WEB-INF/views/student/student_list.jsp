@@ -35,22 +35,26 @@
 	        columns: [[  
 				{field:'chk',checkbox: true,width:50},
  		        {field:'id',title:'ID',width:50, sortable: true},    
+ 		       {field:'photo',title:'头像',width:100, 
+ 		        	formatter:function(value,index,row){
+ 		        		return '<img src='+value+' width="100px" />';
+ 		    	   } 	
+ 		       },
  		        {field:'username',title:'姓名',width:150, sortable: true},
- 		        {field:'sn',title:'学号',width:150, sortable: true},
- 		        {field:'sex',title:'性别',width:150, sortable: true},
- 		        {field:'clazzId',title:'所属班级',width:200, sortable: true,
- 		        	formatter:function(value,index,row){//formatter 属于列参数，表示对于当前列的数据进行格式化操作，它是一个函数，有三个参数，分别是value，row,index
- 		        		for(var i=0;i<clazzList.length;i++){//value：表示当前单元格中的值 	row：表示当前行 index：表示当前行的下标 
- 		        			if(clazzList[i].id == value){//可以使用return返回想要的数据显示在单元格中
+ 		       {field:'sn',title:'学号',width:150, sortable: true},
+ 		      {field:'sex',title:'性别',width:150, sortable: true},
+ 		       {field:'clazzId',title:'所属班级',width:150, sortable: true,
+ 		        	formatter:function(value,index,row){
+ 		        		for(var i=0;i<clazzList.length;i++){
+ 		        			if(clazzList[i].id == value){
  		        				return clazzList[i].name;
  		        			}
  		        		}
  		        		return value;
  		    	   }
  		        },
- 		        
  		        {field:'password',title:'密码',width:150},
- 		        {field:'remark',title:'备注',width:200},
+ 		       {field:'remark',title:'备注',width:200},
 	 		]], 
 	        toolbar: "#toolbar"
 	    }); 
@@ -68,6 +72,7 @@
 	    	table = $("#addTable");
 	    	$("#addDialog").dialog("open");
 	    });
+	  
 	    //修改
 	    $("#edit").click(function(){
 	    	table = $("#editTable");
@@ -89,7 +94,7 @@
             	$(selectRows).each(function(i, row){
             		ids[i] = row.id;
             	});
-            	$.messager.confirm("消息提醒", "如果学生下存在学生信息则无法删除，须先删除学生下属的学生信息？", function(r){
+            	$.messager.confirm("消息提醒", "确定删除学生信息？", function(r){
             		if(r){
             			$.ajax({
 							type: "post",
@@ -116,7 +121,7 @@
 	  	//设置添加窗口
 	    $("#addDialog").dialog({
 	    	title: "添加学生",
-	    	width: 500,
+	    	width: 450,
 	    	height: 650,
 	    	iconCls: "icon-add",
 	    	modal: true,
@@ -173,7 +178,7 @@
 	  	$("#editDialog").dialog({
 	  		title: "修改学生信息",
 	    	width: 450,
-	    	height: 400,
+	    	height: 650,
 	    	iconCls: "icon-edit",
 	    	modal: true,
 	    	collapsible: false,
@@ -224,21 +229,16 @@
 				var selectRow = $("#dataList").datagrid("getSelected");
 				//设置值
 				$("#edit-id").val(selectRow.id);
-				$("#edit_name").textbox('setValue', selectRow.name);
-				$("#edit_gradeId").combobox('setValue', selectRow.gradeId);
+				$("#edit_username").textbox('setValue', selectRow.username);
+				$("#edit_clazzId").combobox('setValue', selectRow.clazzId);
+				$("#edit_sex").combobox('setValue', selectRow.sex);
+				$("#edit_password").textbox('setValue', selectRow.password);
 				$("#edit_remark").textbox('setValue', selectRow.remark);
+				$("#edit-photo-preview").attr("src",selectRow.photo);
+				$("#edit_photo").val(selectRow.photo);
 			}
 	    });
 	   	
-	  	//下拉框通用属性
-	  	$("#gradeId").combobox({
-	  		width: "200",
-	  		height: "30",
-	  		valueField: "id",
-	  		textField: "name",
-	  		multiple: false, //可多选
-	  		editable: false, //不可编辑
-	  	});
 	  	
 	  	//搜索按钮
 	  	$("#search-btn").click(function(){
@@ -247,7 +247,7 @@
 	  			clazzId:$("#search-clazz-id").combobox('getValue')
 	  		});
 	  	});
-		//上传图片按钮
+	  	//上传图片按钮
 	  	$("#upload-btn").click(function(){
 	  		if($("#add-upload-photo").filebox("getValue") == ''){
 	  			$.messager.alert("消息提醒","请选择图片文件!","warning");
@@ -255,8 +255,14 @@
 	  		}
 	  		$("#photoForm").submit();
 	  	});
+	  	$("#edit-upload-btn").click(function(){
+	  		if($("#edit-upload-photo").filebox("getValue") == ''){
+	  			$.messager.alert("消息提醒","请选择图片文件!","warning");
+	  			return;
+	  		}
+	  		$("#editPhotoForm").submit();
+	  	});
 	});
-	
 	function uploaded(e){
 		var data = $(window.frames["photo_target"].document).find("body pre").text();
 		if(data == '')return;
@@ -280,16 +286,19 @@
 	</table> 
 	<!-- 工具栏 -->
 	<div id="toolbar">
-	<div id="toolbar">
+		<c:if test="${userType == 1}">
 		<div style="float: left;"><a id="add" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a></div>
 			<div style="float: left;" class="datagrid-btn-separator"></div>
+	    </c:if>
 		<div style="float: left;"><a id="edit" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a></div>
 			<div style="float: left;" class="datagrid-btn-separator"></div>
 		<div>
+			<c:if test="${userType == 1}">
 			<a id="delete" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-some-delete',plain:true">删除</a>
-			学生名称：<input id="search-name" class="easyui-textbox" />
-			所属年级：
-			<select id="search-clazz-id" class="easyui-combobox" style="width: 200px;">
+	     	</c:if>
+			学生名：<input id="search-name" class="easyui-textbox" />
+			所属班级：
+			<select id="search-clazz-id" class="easyui-combobox" style="width: 150px;">
 				<option value="">全部</option>
 				<c:forEach items="${ clazzList}" var="clazz">
 	    			<option value="${clazz.id }">${clazz.name }</option>
@@ -298,16 +307,15 @@
 			<a id="search-btn" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">搜索</a>
 		</div>
 	</div>
-	</div>
 	
 	<!-- 添加窗口 -->
 	<div id="addDialog" style="padding: 10px;">  
-	  <form id="photoForm" method="post" method="post" enctype="multipart/form-data" action="upload_photo" target="photo_target">
-	    	<table id="photoTable" cellpadding="8">
-	        <tr >
+		<form id="photoForm" method="post" enctype="multipart/form-data" action="upload_photo" target="photo_target">
+	    	<table id="addTable1" cellpadding="8">
+	    		<tr >
 	    			<td>预览头像:</td>
 	    			<td>
-	    			    <img id="photo-preview" alt="照片" style="max-width: 120px; max-height: 120px;" title="照片" src="/Student/photo/default.png" />
+	    				<img id="photo-preview" alt="照片" style="max-width: 100px; max-height: 100px;" title="照片" src="/StudentManagerSSM/photo/student.jpg" />
 	    			</td>
 	    		</tr>
 	    		<tr >
@@ -317,11 +325,11 @@
 	    				<a id="upload-btn" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">上传图片</a>
 	    			</td>
 	    		</tr>
-	       </table>
-	  </form>  	
+	    	</table>
+	    </form>
    		<form id="addForm" method="post">
-	    	<table id="addTable" cellpadding="8">
-	    	  <input id="add_photo" type="hidden" name="photo" value="/Student/photo/default.png">
+	    	<table id="addTable2" cellpadding="8">
+	    		<input id="add_photo" type="hidden" name="photo" value="/StudentManagerSSM/photo/student.jpg"  />
 	    		<tr >
 	    			<td>学生姓名:</td>
 	    			<td>
@@ -338,8 +346,8 @@
 	    			<td>所属班级:</td>
 	    			<td>
 	    				<select id="add_clazzId"  class="easyui-combobox" style="width: 200px;" name="clazzId" data-options="required:true, missingMessage:'请选择所属班级'">
-	    					<c:forEach items="${clazzList}" var="clazz">
-	    						<option value="${clazz.id}">${clazz.name}</option>
+	    					<c:forEach items="${ clazzList}" var="clazz">
+	    						<option value="${clazz.id }">${clazz.name }</option>
 	    					</c:forEach>
 	    				</select>
 	    			</td>
@@ -347,10 +355,10 @@
 	    		<tr >
 	    			<td>学生性别:</td>
 	    			<td>
-	    			   <select id="add_sex"  class="easyui-combobox" style="width: 200px;" name="sex" data-options="required:true, missingMessage:'请选择性别'">
-	    					<option value=男>男</option>
-	    					<option value=女>女</option>
-	    				</select>	
+	    				<select id="add_sex"  class="easyui-combobox" style="width: 200px;" name="sex" data-options="required:true, missingMessage:'请选择学生性别'">
+	    					<option value="男">男</option>
+	    					<option value="女">女</option>
+	    				</select>
 	    			</td>
 	    		</tr>
 	    		<tr>
@@ -364,22 +372,55 @@
 	
 	<!-- 修改窗口 -->
 	<div id="editDialog" style="padding: 10px">
-    	<form id="editForm" method="post">
-    		<input type="hidden" name="id" id="edit-id">
-	    	<table id="editTable" border=0 cellpadding="8" >
+    	<form id="editPhotoForm" method="post" enctype="multipart/form-data" action="upload_photo" target="photo_target">
+	    	<table id="editTable1" cellpadding="8">
 	    		<tr >
-	    			<td>学生名:</td>
+	    			<td>预览头像:</td>
 	    			<td>
-	    				<input id="edit_name"  class="easyui-textbox" style="width: 200px; height: 30px;" type="text" name="name" data-options="required:true, missingMessage:'请填写学生名'"  />
+	    				<img id="edit-photo-preview" alt="照片" style="max-width: 100px; max-height: 100px;" title="照片" src="/StudentManagerSSM/photo/student.jpg" />
 	    			</td>
 	    		</tr>
 	    		<tr >
-	    			<td>所属年级:</td>
+	    			<td>学生头像:</td>
 	    			<td>
-	    				<select id="edit_gradeId"  class="easyui-combobox" style="width: 200px;" name="gradeId" data-options="required:true, missingMessage:'请选择所属年级'">
-	    					<c:forEach items="${gradeList}" var="grade">
-	    						<option value="${grade.id}">${grade.name}</option>
+	    				<input id="edit-upload-photo" class="easyui-filebox" name="photo" data-options="prompt:'选择照片'" style="width:200px;">
+	    				<a id="edit-upload-btn" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">上传图片</a>
+	    			</td>
+	    		</tr>
+	    	</table>
+	    </form>
+   		<form id="editForm" method="post">
+	    	<input type="hidden" name="id" id="edit-id">
+	    	<table id="editTable2" cellpadding="8">
+	    		<input id="edit_photo" type="hidden" name="photo" value="/StudentManagerSSM/photo/student.jpg"  />
+	    		<tr >
+	    			<td>学生姓名:</td>
+	    			<td>
+	    				<input id="edit_username"  class="easyui-textbox" style="width: 200px; height: 30px;" type="text" name="username" data-options="required:true, missingMessage:'请填写学生姓名'"  />
+	    			</td>
+	    		</tr>
+	    		<tr >
+	    			<td>登录密码:</td>
+	    			<td>
+	    				<input id="edit_password"  class="easyui-textbox" style="width: 200px; height: 30px;" type="password" name="password" data-options="required:true, missingMessage:'请填写登录密码'"  />
+	    			</td>
+	    		</tr>
+	    		<tr >
+	    			<td>所属班级:</td>
+	    			<td>
+	    				<select id="edit_clazzId"  class="easyui-combobox" style="width: 200px;" name="clazzId" data-options="required:true, missingMessage:'请选择所属班级'">
+	    					<c:forEach items="${ clazzList}" var="clazz">
+	    						<option value="${clazz.id }">${clazz.name }</option>
 	    					</c:forEach>
+	    				</select>
+	    			</td>
+	    		</tr>
+	    		<tr >
+	    			<td>学生性别:</td>
+	    			<td>
+	    				<select id="edit_sex"  class="easyui-combobox" style="width: 200px;" name="sex" data-options="required:true, missingMessage:'请选择学生性别'">
+	    					<option value="男">男</option>
+	    					<option value="女">女</option>
 	    				</select>
 	    			</td>
 	    		</tr>
@@ -390,9 +431,7 @@
 	    	</table>
 	    </form>
 	</div>
-		
-		<!-- 提交表单处理iframe框架 隐藏用户无感知 -->
-	<iframe id="photo_target" name="photo_target" onload="uploaded(this)"></iframe>    
-	    
+<!-- 提交表单处理iframe框架 -->
+	<iframe id="photo_target" name="photo_target" onload="uploaded(this)"></iframe>    	
 </body>
 </html>

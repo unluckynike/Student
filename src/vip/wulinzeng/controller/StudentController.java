@@ -68,10 +68,15 @@ public class StudentController {
 	public Map<String, Object> getList(
 			@RequestParam(value = "name", required = false, defaultValue = "") String name,
 			@RequestParam(value = "clazzId", required = false) Long clazzId,
-			Page page) {
+			Page page,HttpServletRequest request) {
 		Map<String, Object> ret = new HashMap<String, Object>();
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("username", "%" + name + "%");// 模糊查询
+		Object attribute = request.getSession().getAttribute("userType");//权限
+		if ("2".equals(attribute.toString())) {//说明是学生进入
+			Student loginStudent = (Student)request.getSession().getAttribute("user");
+			queryMap.put("username", "%" + loginStudent.getUsername() + "%");
+		}
 		if (clazzId != null) {
 			queryMap.put("clazzId", clazzId);
 		}
@@ -133,31 +138,34 @@ public class StudentController {
 		return ret;
 	}
 
+	/**
+	 * 删除
+	 * @param ids
+	 * @return
+	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, String> Delete(@RequestParam(value = "ids[]", required = true) Long[] ids) {
 		Map<String, String> ret = new HashMap<String, String>();
-		if (ids == null || ids.length == 0) {
+		if(ids == null || ids.length == 0){
 			ret.put("type", "error");
-			ret.put("msg", "选择要删除的数据");
+			ret.put("msg", "请选择要删除的数据！");
 			return ret;
 		}
 		try {
-			if (clazzService.delete(StringUtil.joinString(Arrays.asList(ids), ",")) <= 0) {// aslist将一个数组转化为一个List对象
-																							// jdk1.2 返回一个arrayList
+			if(studentService.delete(StringUtil.joinString(Arrays.asList(ids), ",")) <= 0){
 				ret.put("type", "error");
-				ret.put("msg", "删除数据失败");
+				ret.put("msg", "删除失败！");
 				return ret;
 			}
-
 		} catch (Exception e) {
 			// TODO: handle exception
 			ret.put("type", "error");
-			ret.put("msg", "学生下存在学生信息");
+			ret.put("msg", "该学生下存在其他信息，请勿冲动！");
 			return ret;
 		}
 		ret.put("type", "success");
-		ret.put("msg", "学生删除成功");
+		ret.put("msg", "学生删除成功！");
 		return ret;
 	}
 
@@ -169,30 +177,36 @@ public class StudentController {
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> edit(@RequestParam(value = "gradeId", required = true) Long gradeId, Clazz clazz) {
+	public Map<String, String> edit( Student student) {
 		Map<String, String> ret = new HashMap<String, String>();
-		if (StringUtils.isEmpty(clazz.getName())) {
+		if(StringUtils.isEmpty(student.getUsername())){
 			ret.put("type", "error");
-			ret.put("msg", "学生名称不能为空");
+			ret.put("msg", "学生姓名不能为空！");
 			return ret;
 		}
-		/**
-		 * 同添加待优化
-		 */
-		clazz.setGradeID(gradeId);
-		// System.out.println(clazz);
-		if (clazz.getGradeId() == 0) {
+		if(StringUtils.isEmpty(student.getPassword())){
 			ret.put("type", "error");
-			ret.put("msg", "所属年级不能为空不能为空");
+			ret.put("msg", "学生登录密码不能为空！");
 			return ret;
 		}
-		if (clazzService.edit(clazz) <= 0) {
+		if(student.getClazzId() == null){
 			ret.put("type", "error");
-			ret.put("msg", "学生修改失败");
+			ret.put("msg", "请选择所属班级！");
+			return ret;
+		}
+		if(isExist(student.getUsername(), student.getId())){
+			ret.put("type", "error");
+			ret.put("msg", "该姓名已存在！");
+			return ret;
+		}
+		student.setSn(StringUtil.generateSn("18001", ""));
+		if(studentService.edit(student) <= 0){
+			ret.put("type", "error");
+			ret.put("msg", "学生添加失败！");
 			return ret;
 		}
 		ret.put("type", "success");
-		ret.put("msg", "学生修改成功");
+		ret.put("msg", "学生修改成功！");
 		return ret;
 	}
 

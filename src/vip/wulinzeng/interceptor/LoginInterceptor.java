@@ -10,7 +10,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import net.sf.json.JSONObject;
-import vip.wulinzeng.entity.User;
 
 /**
  * 后台访问拦截器
@@ -38,7 +37,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 		// TODO Auto-generated method stub
 		StringBuffer urlString=request.getRequestURL();
 		System.out.println("进入拦截器"+urlString);
-		User user = (User)request.getSession().getAttribute("user");
+		Object user = request.getSession().getAttribute("user");
 		if (user==null) {
 			System.out.println("未登录");
 			//ajax请求

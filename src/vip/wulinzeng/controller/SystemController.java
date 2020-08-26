@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import vip.wulinzeng.entity.Student;
 import vip.wulinzeng.entity.User;
+import vip.wulinzeng.service.StudentService;
 import vip.wulinzeng.service.UserService;
 import vip.wulinzeng.util.CpachaUtil;
 
@@ -34,6 +36,8 @@ public class SystemController {
 
 	@Autowired
 	private UserService userService;
+    @Autowired	
+	private StudentService studentService;
 	
 	@RequestMapping(value = "/index",method = RequestMethod.GET)
 	public ModelAndView index(ModelAndView module) {
@@ -47,6 +51,12 @@ public class SystemController {
 	public ModelAndView login(ModelAndView model) {
 		model.setViewName("system/login");
 		return model;
+	}
+	
+	@RequestMapping(value = "/login_out",method = RequestMethod.GET)
+	public String logout(HttpServletRequest request) {
+		request.getSession().setAttribute("user", null);
+		return "redirect:login";
 	}
 	
 	@RequestMapping(value = "/login",method = RequestMethod.POST)
@@ -103,13 +113,23 @@ public class SystemController {
 		}
 		request.getSession().setAttribute("user", user);//将用户名放入session
 	 }
-		/**
-		 * bug ！！！
-		 */
 		if(type==2){//学生
-		System.out.println("学生登录");
+	    System.out.println("学生登录");
+		Student student = studentService.findByUserName(usernameString);
+		if (student==null) {
+			ret.put("type", "error");
+			ret.put("msg", "学生不存在");
+			//System.out.println("has running");
+			return ret;
+		}
+		if (!passwordString.equals(student.getPassword())) {
+			ret.put("type", "error");
+			ret.put("msg", "密码错误");
+			return ret;
+		}
+		request.getSession().setAttribute("user", student);//将用户名放入session
 	}
-		
+		request.getSession().setAttribute("userType", type);
 		ret.put("type", "success");
 		ret.put("msg", "登录成功");
 		return ret;
