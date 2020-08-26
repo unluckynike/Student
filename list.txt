@@ -59,9 +59,12 @@ D:.
     |   \---skin
     |       \---default
     +---META-INF
+    +---photo
     \---WEB-INF
         +---lib
         \---views
+            +---clazz
             +---grade
+            +---student
             +---system
             \---user
