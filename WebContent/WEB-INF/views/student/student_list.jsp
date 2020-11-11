@@ -315,7 +315,7 @@
 	    		<tr >
 	    			<td>预览头像:</td>
 	    			<td>
-	    				<img id="photo-preview" alt="照片" style="max-width: 100px; max-height: 100px;" title="照片" src="/StudentManagerSSM/photo/student.jpg" />
+	    				<img id="photo-preview" alt="照片" style="max-width: 100px; max-height: 100px;" title="照片" src="/Student/photo/student.jpg" />
 	    			</td>
 	    		</tr>
 	    		<tr >
@@ -329,7 +329,7 @@
 	    </form>
    		<form id="addForm" method="post">
 	    	<table id="addTable2" cellpadding="8">
-	    		<input id="add_photo" type="hidden" name="photo" value="/StudentManagerSSM/photo/student.jpg"  />
+	    		<input id="add_photo" type="hidden" name="photo" value="/Student/photo/student.jpg"  />
 	    		<tr >
 	    			<td>学生姓名:</td>
 	    			<td>
@@ -377,7 +377,7 @@
 	    		<tr >
 	    			<td>预览头像:</td>
 	    			<td>
-	    				<img id="edit-photo-preview" alt="照片" style="max-width: 100px; max-height: 100px;" title="照片" src="/StudentManagerSSM/photo/student.jpg" />
+	    				<img id="edit-photo-preview" alt="照片" style="max-width: 100px; max-height: 100px;" title="照片" src="/Student/photo/student.jpg" />
 	    			</td>
 	    		</tr>
 	    		<tr >
@@ -392,7 +392,7 @@
    		<form id="editForm" method="post">
 	    	<input type="hidden" name="id" id="edit-id">
 	    	<table id="editTable2" cellpadding="8">
-	    		<input id="edit_photo" type="hidden" name="photo" value="/StudentManagerSSM/photo/student.jpg"  />
+	    		<input id="edit_photo" type="hidden" name="photo" value="/Student/photo/student.jpg"  />
 	    		<tr >
 	    			<td>学生姓名:</td>
 	    			<td>

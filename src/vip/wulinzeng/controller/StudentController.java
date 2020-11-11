@@ -38,7 +38,7 @@ import vip.wulinzeng.util.StringUtil;
 @RequestMapping("/student")
 @Controller
 public class StudentController {
-
+  
 	@Autowired
 	private ClazzService clazzService;
 	@Autowired
