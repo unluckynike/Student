@@ -90,6 +90,8 @@
 
 ![](infor/ER.png)
 
+![](infor/navicatER.png)
+
 `user`表设计
 
 > user 表是操作管理员，数据存储的是管理员用户
